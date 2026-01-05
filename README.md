@@ -1,19 +1,28 @@
 # Delivery Tracking System
 
-A comprehensive RESTful API for managing delivery tracking operations, including parcel management, real-time tracking, driver assignments, and location updates.
+A comprehensive RESTful API for managing delivery tracking operations, built with a modular architecture ready for microservices migration. Features include parcel management, real-time tracking, driver assignments, and location updates.
 
-## Features
+## 🚀 Features
 
 - 🔐 **Authentication & Authorization**: JWT-based authentication with role-based access control (Admin, Customer, Driver)
 - 📦 **Parcel Management**: Create, track, and manage parcels with unique tracking numbers
 - 🚚 **Delivery Management**: Assign deliveries to drivers, track delivery status, and update locations
 - 📍 **Real-time Location Tracking**: Track driver locations with GPS coordinates
 - 📊 **Status History**: Complete tracking event history for each parcel
-- 🔒 **Security**: Helmet.js, CORS, password hashing with bcrypt
+- 🔒 **Security**: Helmet.js, CORS, password hashing with bcrypt, input validation
 - 📝 **Logging**: Winston logger with file and console transports
+- 🧪 **Testing**: Jest testing framework with unit and integration tests
+- 🏗️ **Modular Architecture**: Organized for easy microservices migration
 - 🐳 **Docker Support**: Containerized application with Docker and Docker Compose
 
-## Tech Stack
+## 📚 Documentation
+
+- **[API Documentation](docs/API.md)** - Complete API endpoint reference
+- **[Service Architecture](docs/SERVICE_ARCHITECTURE.md)** - Architecture overview and microservices migration guide
+- **[Contributing Guidelines](docs/CONTRIBUTING.md)** - Code standards and contribution process
+- **[Development Guide](docs/README.md)** - Detailed development and deployment guide
+
+## 🛠️ Tech Stack
 
 - **Runtime**: Node.js 18+
 - **Language**: TypeScript
@@ -24,6 +33,33 @@ A comprehensive RESTful API for managing delivery tracking operations, including
 - **Validation**: express-validator
 - **Logging**: Winston
 - **Security**: Helmet, bcryptjs
+- **Testing**: Jest, Supertest
+- **Code Quality**: ESLint, Prettier
+
+## 📁 Project Structure
+
+```
+delivery-tracking-system/
+├── src/                    # Source code
+│   ├── config/            # Configuration (database, logger, environment)
+│   ├── controllers/       # Request handlers
+│   ├── middleware/        # Express middleware
+│   ├── models/            # Database models
+│   ├── routes/            # API routes
+│   ├── utils/             # Utility functions
+│   ├── __tests__/         # Test files
+│   ├── app.ts             # Express application
+│   └── server.ts          # Server entry point
+├── shared/                 # Shared resources
+│   ├── types/             # TypeScript types and interfaces
+│   ├── utils/             # Common utility functions
+│   ├── constants/         # Shared constants
+│   └── middleware/        # Shared middleware
+├── prisma/                 # Database schema and migrations
+├── docs/                   # Documentation
+├── logs/                   # Application logs
+└── dist/                   # Compiled output
+```
 
 ## Prerequisites
 
@@ -277,18 +313,28 @@ Content-Type: application/json
 6. `FAILED` - Delivery failed
 7. `CANCELLED` - Parcel cancelled
 
-## Scripts
+## 📜 Available Scripts
 
+### Development
 - `npm run dev` - Start development server with hot reload
 - `npm run build` - Build TypeScript to JavaScript
 - `npm start` - Start production server
+
+### Database
 - `npm run prisma:generate` - Generate Prisma client
 - `npm run prisma:migrate` - Run database migrations
 - `npm run prisma:studio` - Open Prisma Studio (database GUI)
+- `npm run prisma:seed` - Seed database with test data
+
+### Code Quality
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint errors
 - `npm run format` - Format code with Prettier
-- `npm test` - Run tests
+
+### Testing
+- `npm test` - Run all tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage report
 
 ## Database Schema
 

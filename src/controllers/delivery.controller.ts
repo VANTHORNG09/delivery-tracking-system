@@ -93,7 +93,7 @@ export const getDeliveries = async (
     const userId = req.user!.userId;
     const userRole = req.user!.role;
 
-    let where: any = {};
+    const where: Record<string, unknown> = {};
 
     if (userRole === 'DRIVER') {
       where.driverId = userId;
