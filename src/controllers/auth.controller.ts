@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../config/database';
 import { hashPassword, comparePassword, generateToken } from '../utils/auth';
-import { BadRequestError, UnauthorizedError, ConflictError } from '../utils/errors';
+import { UnauthorizedError, ConflictError } from '../utils/errors';
 import { AuthRequest } from '../middleware/auth.middleware';
 
 export const register = async (

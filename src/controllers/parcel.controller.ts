@@ -81,11 +81,11 @@ export const getParcels = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { status, role } = req.query;
+    const { status } = req.query;
     const userId = req.user!.userId;
     const userRole = req.user!.role;
 
-    let where: any = {};
+    let where: Record<string, unknown> = {};
 
     if (userRole === 'CUSTOMER') {
       where = {
