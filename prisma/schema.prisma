@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+  DRIVER
+}
+
+enum ParcelStatus {
+  PENDING
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  FAILED
+  CANCELLED
+}
+
+enum DeliveryPriority {
+  STANDARD
+  EXPRESS
+  SAME_DAY
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  phone     String?
+  role      UserRole @default(CUSTOMER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  sentParcels     Parcel[]   @relation("SenderParcels")
+  receivedParcels Parcel[]   @relation("ReceiverParcels")
+  deliveries      Delivery[] @relation("DriverDeliveries")
+
+  @@map("users")
+}
+
+model Parcel {
+  id              String           @id @default(uuid())
+  trackingNumber  String           @unique @default(uuid())
+  description     String
+  weight          Float
+  dimensions      String?
+  value           Float?
+  priority        DeliveryPriority @default(STANDARD)
+  status          ParcelStatus     @default(PENDING)
+  senderId        String
+  receiverId      String
+  pickupAddress   String
+  deliveryAddress String
+  pickupDate      DateTime?
+  deliveryDate    DateTime?
+  estimatedDelivery DateTime?
+  specialInstructions String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  // Relations
+  sender         User               @relation("SenderParcels", fields: [senderId], references: [id])
+  receiver       User               @relation("ReceiverParcels", fields: [receiverId], references: [id])
+  delivery       Delivery?
+  trackingEvents TrackingEvent[]
+  
+  @@index([trackingNumber])
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([status])
+  @@map("parcels")
+}
+
+model Delivery {
+  id                String       @id @default(uuid())
+  parcelId          String       @unique
+  driverId          String?
+  assignedAt        DateTime?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  currentLatitude   Float?
+  currentLongitude  Float?
+  notes             String?
+  proofOfDelivery   String?
+  signature         String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  // Relations
+  parcel     Parcel   @relation(fields: [parcelId], references: [id], onDelete: Cascade)
+  driver     User?    @relation("DriverDeliveries", fields: [driverId], references: [id])
+  locations  Location[]
+
+  @@index([parcelId])
+  @@index([driverId])
+  @@map("deliveries")
+}
+
+model TrackingEvent {
+  id          String       @id @default(uuid())
+  parcelId    String
+  status      ParcelStatus
+  location    String?
+  latitude    Float?
+  longitude   Float?
+  description String
+  timestamp   DateTime     @default(now())
+
+  // Relations
+  parcel Parcel @relation(fields: [parcelId], references: [id], onDelete: Cascade)
+
+  @@index([parcelId])
+  @@index([timestamp])
+  @@map("tracking_events")
+}
+
+model Location {
+  id         String   @id @default(uuid())
+  deliveryId String
+  latitude   Float
+  longitude  Float
+  accuracy   Float?
+  timestamp  DateTime @default(now())
+
+  // Relations
+  delivery Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+
+  @@index([deliveryId])
+  @@index([timestamp])
+  @@map("locations")
+}
